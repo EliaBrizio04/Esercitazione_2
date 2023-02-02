@@ -49,6 +49,33 @@ let server = http.createServer(function(req, res){
                 ]);
         break;
 
+        case "/q1":
+            find(res, "utenti", {residenza:"Fossano"}, {});
+        break;
+
+        case "/q2":
+            find(res, "utenti", {nome:/^[CL]/, anni:{$gt:50}}, {});
+        break;
+
+        case "/q3":
+            op = [
+                {$match:{nome:/o$/}},
+                {$project:{_id:0, nome:1, cognome:1}},
+                {$limit:2}
+            ]
+            aggregate(res, "utenti", op);
+        break;
+
+        case "/q4":
+            op = [
+                {$match:{}},
+                {$group:{residenza:{}, mediaAnni:{$avg:{anni}}}}
+            ];
+            aggregate(res, "utenti", op);
+        break;
+
+        
+
         default:
             json = {cod:-1, desc:"Nessuna query trovata con quel nome"};
             res.end(JSON.stringify(json));
