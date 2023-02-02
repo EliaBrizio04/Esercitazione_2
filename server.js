@@ -68,13 +68,59 @@ let server = http.createServer(function(req, res){
 
         case "/q4":
             op = [
-                {$match:{}},
-                {$group:{residenza:{}, mediaAnni:{$avg:{anni}}}}
+                {$group:{_id:"$residenza", mediaAnni:{$avg:"$anni"}}}
             ];
             aggregate(res, "utenti", op);
         break;
 
-        
+        case "/q5":
+            //find(res, "transazioni", {mittente: 4}, {data:0});
+            find2(res, "utenti", {nome:"Rosanna", cognome:"Gelso"}, {}, function (ris){
+                let mit = ris[0]._id;
+                find2(res, "transazioni", {$or:[{mittente:mit}, {destinatario:mit}]}, {_id:0, data:0}, function (ris){
+                    for (let item of ris){
+                        item.nome = "Rosanna";
+                        item.cognome = "Gelso";
+                    }
+                    res.end(JSON.stringify(ris));
+                });
+            });
+        break;
+
+        case "/q6":
+            op = [
+                {$match:{somma:{$gt:20}}},
+                {$group:{_id:{}, numTransazioni:{$sum:1}}}
+            ]
+            aggregate(res, "transazioni", op);
+        break;
+
+        case "/q7":
+            find2(res, "utenti", {nome:"Mattia", cognome:"Manzo"}, {}, function (ris){
+                let mit = ris[0]._id;
+                find2(res, "transazioni", {$or:[{mittente:mit}, {destinatario:mit}]}, {_id:0, data:0}, function (ris){
+                    let risultato = 0;
+                    ris.forEach(function (transazione){
+                        if (transazione.mittente == mit)
+                            risultato -= transazione.somma;
+                        else
+                            risultato += transazione.somma;
+                    })
+                    res.end(JSON.stringify({nome:"Mattia", cognome:"Manzo", bilancio:risultato}));
+                });
+            });
+        break;
+
+        case "/q8":
+            op = [
+                {$group:{_id:"$destinatario", totSoldi:{$sum:"$somma"}}}
+            ]
+            aggregate(res, "transazioni", op);
+        break;
+
+        case "/q9":
+            find(res, "transazioni", {data:{$gt:new Date("2021-01-01")}}, {});
+        break;
 
         default:
             json = {cod:-1, desc:"Nessuna query trovata con quel nome"};
