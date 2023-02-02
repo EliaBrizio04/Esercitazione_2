@@ -8,7 +8,7 @@ let  urlServerMongoDb = "mongodb://127.0.0.1:27017/";
 let http = require("http");
 let url = require("url");
 
-let database = "5AInf_2";
+let database = "DB_Banca";
 let op;
 
 //DEFINISCO IL SERVER
@@ -21,16 +21,31 @@ let server = http.createServer(function(req, res){
     let scelta = (url.parse(req.url)).pathname;
     switch(scelta){
         case "/i1":
-                insertMany(res, "Persone",
+                insertMany(res, "transazioni",
                     [
-
+                        {mittente:4, destinatario:3, somma:54.6, data:new Date("2020-08-16")},
+                        {mittente:3, destinatario:5, somma:20.0, data:new Date("2020-09-18")},
+                        {mittente:4, destinatario:3, somma:5.60, data:new Date("2020-10-23")},
+                        {mittente:5, destinatario:2, somma:14.3, data:new Date("2020-12-03")},
+                        {mittente:2, destinatario:6, somma:12.0, data:new Date("2021-01-14")},
+                        {mittente:8, destinatario:5, somma:100.0, data:new Date("2021-01-20")},
+                        {mittente:1, destinatario:3, somma:45.0, data:new Date("2021-01-22")},
+                        {mittente:8, destinatario:2, somma:34.8, data:new Date("2021-01-22")},
+                        {mittente:3, destinatario:7, somma:200.0, data:new Date("2021-01-27")}
                     ]);
         break;
 
         case "/i2":
-            insertMany(res, "Voti",
+            insertMany(res, "utenti",
                 [
-                    
+                    {_id:1, nome:"Carlo", cognome:"Ferrero", residenza:"Fossano", anni:54},
+                    {_id:2, nome:"Leopoldo", cognome:"Marengo", residenza:"Cuneo", anni:65},
+                    {_id:3, nome:"Mattia", cognome:"Manzo", residenza:"Bra", anni:22},
+                    {_id:4, nome:"Rosanna", cognome:"Gelso", residenza:"Savigliano", anni:35},
+                    {_id:5, nome:"Margherita", cognome:"Pea", residenza:"Cuneo", anni:18},
+                    {_id:6, nome:"Leone", cognome:"Manzo", residenza:"Fossano", anni:43},
+                    {_id:7, nome:"Albana", cognome:"Renzi", residenza:"Bra", anni:48},
+                    {_id:8, nome:"Elisa", cognome:"Basso", residenza:"Savigliano", anni:31}
                 ]);
         break;
 
